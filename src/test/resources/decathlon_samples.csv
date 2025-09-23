@@ -1,0 +1,6 @@
+event,input,expected
+100m,11.00,861
+100m,10.50,975
+LongJump,720,861
+ShotPut,12.00,613
+400m,50.00,816
