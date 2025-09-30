@@ -1,0 +1,11 @@
+event,input,expected
+100m,11.00,861
+LongJump,720,862
+ShotPut,12.00,606
+HighJump,200,803
+400m,50.00,815
+110mH,16.00,733
+Discus,40.00,665
+PoleVault,500,910
+Javelin,60.00,738
+1500m,280.0,680
