@@ -1,8 +1,8 @@
 event,input,expected
 100mH,14.00,978
-HighJump,185,1041
+HighJump,1.85,1041
 ShotPut,16.50,962
 200m,24.00,981
-LongJump,630,943
+LongJump,4,308
 Javelin,45.00,763
 800m,130.0,965
