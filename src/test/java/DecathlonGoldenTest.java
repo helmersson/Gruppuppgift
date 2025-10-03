@@ -21,7 +21,7 @@ class DecathlonGoldenTest {
             entry("100m",  v -> new Deca100M().calculateResult(v)),
             entry("LongJump", v -> new DecaLongJump().calculateResult(toCm(v))),
             entry("ShotPut",  v -> new DecaShotPut().calculateResult(v)),
-            //entry("HighJump", v -> new DecaHighJump().calculateResult(toCm(v))),
+            entry("HighJump", v -> new DecaHighJump().calculateResult(toCm(v))),
             entry("400m", v -> new Deca400M().calculateResult(v)),
             entry("110mH", v -> new Deca110MHurdles().calculateResult(v)),
             entry("Discus", v -> new DecaDiscusThrow().calculateResult(v)),
