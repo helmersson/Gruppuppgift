@@ -77,46 +77,17 @@ public class MainGUI {
 
                 int score = 0;
                 switch (discipline) {
-                    case "100m":
-                        Deca100M deca100M = new Deca100M();
-                        score = deca100M.calculateResult(result);
-                        break;
-                    case "400m":
-                        Deca400M deca400M = new Deca400M();
-                        score = deca400M.calculateResult(result);
-                        break;
-                    case "1500m":
-                        Deca1500M deca1500M = new Deca1500M();
-                        score = deca1500M.calculateResult(result);
-                        break;
-                    case "110m Hurdles":
-                        Deca110MHurdles deca110MHurdles = new Deca110MHurdles();
-                        score = deca110MHurdles.calculateResult(result);
-                        break;
-                    case "Long Jump":
-                        DecaLongJump decaLongJump = new DecaLongJump();
-                        score = decaLongJump.calculateResult(result);
-                        break;
-                    case "High Jump":
-                        DecaHighJump decaHighJump = new DecaHighJump();
-                        score = decaHighJump.calculateResult(result);
-                        break;
-                    case "Pole Vault":
-                        DecaPoleVault decaPoleVault = new DecaPoleVault();
-                        score = decaPoleVault.calculateResult(result);
-                        break;
-                    case "Discus Throw":
-                        DecaDiscusThrow decaDiscusThrow = new DecaDiscusThrow();
-                        score = decaDiscusThrow.calculateResult(result);
-                        break;
-                    case "Javelin Throw":
-                        DecaJavelinThrow decaJavelinThrow = new DecaJavelinThrow();
-                        score = decaJavelinThrow.calculateResult(result);
-                        break;
-                    case "Shot Put":
-                        DecaShotPut decaShotPut = new DecaShotPut();
-                        score = decaShotPut.calculateResult(result);
-                        break;
+                    case "100m":            score = new Deca100M().calculateResult(result); break;
+                    case "400m":            score = new Deca400M().calculateResult(result); break;
+                    case "1500m":           score = new Deca1500M().calculateResult(result); break;
+                    case "110m Hurdles":    score = new Deca110MHurdles().calculateResult(result); break;
+                    case "Long Jump":       score = new DecaLongJump().calculateResult(result); break;
+                    case "High Jump":       score = new DecaHighJump().calculateResult(result); break;
+                    case "Pole Vault":      score = new DecaPoleVault().calculateResult(result); break;
+                    case "Discus Throw":    score = new DecaDiscusThrow().calculateResult(result); break;
+                    case "Javelin Throw":   score = new DecaJavelinThrow().calculateResult(result); break;
+                    case "Shot Put":        score = new DecaShotPut().calculateResult(result); break;
+
                 }
 
                 outputArea.append("Competitor: " + name + "\n");
@@ -125,6 +96,9 @@ public class MainGUI {
                 outputArea.append("Score: " + score + "\n\n");
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(null, "Please enter a valid number for the result.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+            } catch (InvalidResultException ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage(), "Invalid Result", JOptionPane.ERROR_MESSAGE);
+                return;
             }
         }
     }
