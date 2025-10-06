@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class DecaBoundaryValueTest {
 
     @Test
-    @DisplayName("100m: validates min, just-inside, mid, max, and out-of-range values")
+    @DisplayName("100m: validates bounds and exceptions")
     @Tag("100m")
     void deca100m_boundaries() throws Exception {
         // Event: 100m (track). Valid range (inclusive): [5.0s, 20.0s]
