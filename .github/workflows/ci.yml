@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, master, '**' ]
   pull_request:
     branches: [ main, master ]
 
@@ -13,21 +13,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Full history required for comparison
+          fetch-depth: 0  # Required for full git history
 
       - name: Validate branch is up to date
         run: |
-          git fetch origin ${{ github.ref_name }}
+          git fetch origin ${{ github.ref_name }} || true
+
           LOCAL=$(git rev-parse HEAD)
-          REMOTE=$(git rev-parse origin/${{ github.ref_name }})
+          REMOTE=$(git rev-parse origin/${{ github.ref_name }} || echo "")
+
+          if [ -z "$REMOTE" ]; then
+            echo "ℹ️ No remote branch found for ${{ github.ref_name }} — skipping validation (likely a new branch)."
+            exit 0
+          fi
 
           if [ "$LOCAL" != "$REMOTE" ]; then
-            if [ "${{ github.event_name }}" = "push" ]; then
-              echo "❌ The local branch is behind origin/${{ github.ref_name }}."
-              echo "Please push the latest changes before running the build."
+            if [[ "${{ github.ref_name }}" == "main" || "${{ github.ref_name }}" == "master" ]]; then
+              echo "❌ Branch is behind origin/${{ github.ref_name }}. Please pull before pushing."
               exit 1
             else
-              echo "::warning::⚠️ Branch is behind origin/${{ github.ref_name }} — please rebase before merging."
+              echo "::warning::⚠️ Branch ${{ github.ref_name }} is behind origin/${{ github.ref_name }} — please rebase before merging."
             fi
           else
             echo "✅ Branch is up to date with origin/${{ github.ref_name }}."
