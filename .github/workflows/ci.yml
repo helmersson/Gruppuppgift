@@ -1,43 +1,64 @@
+# Continuous Integration (CI) workflow for this repository
+# - Triggers on pushes to any branch and pull requests to main/master
+# - Validates branch freshness against origin
+# - Sets up Java 17 with Maven cache
+# - Builds the project (tests currently skipped)
+# - On failure, uploads test reports if any exist
 name: CI
 
 on:
+  # Run on push to any branch. The pattern '**' includes all branches besides main/master.
   push:
     branches: [ main, master, '**' ]
+  # Run on PRs targeting the protected branches only.
   pull_request:
     branches: [ main, master ]
 
 jobs:
   build:
+    # Use the latest Ubuntu runner image.
     runs-on: ubuntu-latest
     steps:
+      # Step 1: Check out the repository so the workflow can access the code.
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          # Fetch full history for scripts that may need commit data (e.g., versioning, changelogs).
           fetch-depth: 0  # Required for full git history
 
+      # Step 2: Ensure the current branch is not behind its remote counterpart.
+      # - If it's main/master and behind, fail fast to enforce up-to-date pushes.
+      # - For feature branches, emit a warning to encourage rebasing before merge.
       - name: Validate branch is up to date
         run: |
+          # Fetch the remote reference for the current branch. Ignore errors for brand-new branches.
           git fetch origin ${{ github.ref_name }} || true
 
+          # Determine local and remote commit SHAs.
           LOCAL=$(git rev-parse HEAD)
           REMOTE=$(git rev-parse origin/${{ github.ref_name }} || echo "")
 
+          # If remote branch doesn't exist yet, skip validation (likely a new branch).
           if [ -z "$REMOTE" ]; then
             echo "ℹ️ No remote branch found for ${{ github.ref_name }} — skipping validation (likely a new branch)."
             exit 0
           fi
 
+          # If SHAs differ, branch is behind its remote.
           if [ "$LOCAL" != "$REMOTE" ]; then
+            # Enforce strict policy on protected branches.
             if [[ "${{ github.ref_name }}" == "main" || "${{ github.ref_name }}" == "master" ]]; then
               echo "❌ Branch is behind origin/${{ github.ref_name }}. Please pull before pushing."
               exit 1
             else
+              # Non-protected branches: warn only, do not fail the build.
               echo "::warning::⚠️ Branch ${{ github.ref_name }} is behind origin/${{ github.ref_name }} — please rebase before merging."
             fi
           else
             echo "✅ Branch is up to date with origin/${{ github.ref_name }}."
           fi
 
+      # Step 3: Install JDK 17 and enable Maven dependency caching for faster builds.
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -45,9 +66,13 @@ jobs:
           java-version: '17'
           cache: 'maven'
 
+      # Step 4: Build the project. Tests are intentionally skipped for speed or because they may require setup.
+      #   - To enable tests in CI later, remove -Dmaven.test.skip=true or add a separate test step.
       - name: Build with Maven (skip tests for now)
         run: mvn -B -ntp -Dmaven.test.skip=true clean package
 
+      # Step 5: If any previous step failed, attempt to upload Surefire/Failsafe reports (if they exist)
+      #         to aid debugging. Missing report paths are ignored to avoid failing the upload step.
       - name: Archive test reports on failure
         if: failure()
         uses: actions/upload-artifact@v4
