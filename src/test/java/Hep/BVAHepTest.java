@@ -1,6 +1,5 @@
-package com.example.decathlon;
+package Hep;
 
-import com.example.decathlon.deca.*;
 import com.example.decathlon.deca.InvalidResultException;
 import com.example.decathlon.heptathlon.*;
 import org.junit.jupiter.api.DisplayName;
@@ -13,8 +12,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @Tag("boundary")
 public class BVAHepTest {
     @Test
-    @DisplayName("100m: validates bounds and exceptions")
-    @Tag("100m")
+    @DisplayName("100mH: validates bounds and exceptions")
+    @Tag("100mH")
     void Hep100MHurdles_boundaries() throws Exception {
         // Event: 100m (track). Valid range (inclusive): [5.0s, 20.0s]
         Hep100MHurdles ev = new Hep100MHurdles();
@@ -36,7 +35,7 @@ public class BVAHepTest {
     }
 
     @Test
-    @DisplayName("110m Hurdles: validates bounds and exceptions")
+    @DisplayName("200M: validates bounds and exceptions")
     @Tag("200M")
     void hep200M_boundaries() throws Exception {
         // Event: 110m Hurdles (track). Valid range (inclusive): [10.0s, 30.0s]
@@ -162,7 +161,7 @@ public class BVAHepTest {
         assertDoesNotThrow(() -> ev.calculateResult(5));
         assertTrue(ev.calculateResult(5) >= 0);
         // Just above min
-        assertTrue(ev.calculateResult(0.001) >= 0);
+        assertTrue(ev.calculateResult(5.01) >= 0);
         // Mid-range sanity
         assertTrue(ev.calculateResult(60.0) >= 0);
         // Just below max

@@ -1,9 +1,9 @@
+package com.example.decathlon.deca;
+
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import static org.assertj.core.api.Assertions.*;
 
-
-import com.example.decathlon.deca.*;
 
 import java.util.HashMap;
 import java.util.Map;

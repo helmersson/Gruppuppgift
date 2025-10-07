@@ -1,3 +1,5 @@
+package Hep;
+
 import com.example.decathlon.deca.InvalidResultException;
 import com.example.decathlon.heptathlon.*;
 import org.junit.Test;

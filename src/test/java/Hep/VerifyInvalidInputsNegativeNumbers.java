@@ -1,4 +1,4 @@
-package com.example.decathlon;
+package Hep;
 
 import com.example.decathlon.deca.InvalidResultException;
 import com.example.decathlon.heptathlon.*;

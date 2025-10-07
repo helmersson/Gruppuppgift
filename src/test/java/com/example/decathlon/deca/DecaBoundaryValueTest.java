@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * One consolidated test class to keep coverage centralized.
 
  * Notes about approach:
- * - We test both track (time-based) and field (distance/height-based) events.
+ * - Track (time-based) and field (distance/height-based).
  * - For track events, a lower time is better; valid intervals are [min, max] inclusive as per each event class.
  * - For field events, a longer distance/height is better; valid intervals are [min, max] inclusive as per each event class.
  */
