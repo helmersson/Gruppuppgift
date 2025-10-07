@@ -14,4 +14,5 @@ class PointsBoundaryTest {
     @Test void field_when_P_le_B_should_be_zero() {
         assertThat(eng.calculate("LongJump", 720)).isEqualTo(0); // (P - B) <= 0 (exempelvärde)
     }
+
 }
