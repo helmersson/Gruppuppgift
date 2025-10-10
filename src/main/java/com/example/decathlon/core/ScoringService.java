@@ -1,37 +1,50 @@
 package com.example.decathlon.core;
 
 import org.springframework.stereotype.Service;
-
 import java.util.Map;
 
 @Service
 public class ScoringService {
     public enum Type { TRACK, FIELD }
-    public record EventDef(String id, Type type, double A, double B, double C, String unit) {}
+    public record EventDef(Type type, double A, double B, double C) {}
 
-    // Minimal set of events (Men, IAAF 2001). Values are typical; adjust as needed in exercises.
-    private final Map<String, EventDef> events = Map.of(
-            "100m",    new EventDef("100m",    Type.TRACK, 25.4347, 18.0, 1.81, "s"),
-            "longJump", new EventDef("longJump", Type.FIELD, 0.14354, 220.0, 1.4,  "cm"), // expects cm
-            "shotPut",  new EventDef("shotPut",  Type.FIELD, 51.39,   1.5,  1.05, "m"),
-            "400m",    new EventDef("400m",    Type.TRACK, 1.53775,  82.0, 1.81, "s")
+    private final Map<String, EventDef> DEC = Map.ofEntries(
+            Map.entry("100m",         new EventDef(Type.TRACK, 25.4347, 18.0, 1.81)),
+            Map.entry("longJump",     new EventDef(Type.FIELD,  0.14354, 220.0, 1.40)),
+            Map.entry("shotPut",      new EventDef(Type.FIELD,  51.39,     1.5, 1.05)),
+            Map.entry("highJump",     new EventDef(Type.FIELD,   0.8465,  75.0, 1.42)),
+            Map.entry("400m",         new EventDef(Type.TRACK,  1.53775,  82.0, 1.81)),
+            Map.entry("110mHurdles",  new EventDef(Type.TRACK,  5.74352,  28.5, 1.92)),
+            Map.entry("discus",       new EventDef(Type.FIELD,   12.91,    4.0, 1.10)),
+            Map.entry("poleVault",    new EventDef(Type.FIELD,   0.2797, 100.0, 1.35)),
+            Map.entry("javelin",      new EventDef(Type.FIELD,   10.14,    7.0, 1.08)),
+            Map.entry("1500m",        new EventDef(Type.TRACK,  0.03768, 480.0, 1.85))
     );
 
-    public EventDef get(String id) { return events.get(id); }
+    private final Map<String, EventDef> HEP = Map.ofEntries(
+            Map.entry("100mHurdles",  new EventDef(Type.TRACK,  9.23076, 26.7, 1.835)),
+            Map.entry("highJump",     new EventDef(Type.FIELD,   1.84523, 75.0, 1.348)),
+            Map.entry("shotPut",      new EventDef(Type.FIELD,  56.0211,   1.5, 1.05)),
+            Map.entry("200m",         new EventDef(Type.TRACK,  4.99087, 42.5, 1.81)),
+            Map.entry("longJump",     new EventDef(Type.FIELD,  0.188807, 210.0, 1.41)),
+            Map.entry("javelin",      new EventDef(Type.FIELD,  15.9803,   3.8, 1.04)),
+            Map.entry("800m",         new EventDef(Type.TRACK,  0.11193, 254.0, 1.88))
+    );
 
-    public int score(String eventId, double raw) {
-        EventDef e = events.get(eventId);
-        if (e == null) return 0; // intentionally lenient
-        double points;
+    public int score(String mode, String eventId, double raw) {
+        Map<String, EventDef> table = "HEP".equals(mode) ? HEP : DEC;
+        EventDef e = table.get(eventId);
+        if (e == null) return 0;
+        double v;
         if (e.type == Type.TRACK) {
             double x = e.B - raw;
             if (x <= 0) return 0;
-            points = e.A * Math.pow(x, e.C);
+            v = e.A * Math.pow(x, e.C);
         } else {
             double x = raw - e.B;
             if (x <= 0) return 0;
-            points = e.A * Math.pow(x, e.C);
+            v = e.A * Math.pow(x, e.C);
         }
-        return (int)Math.floor(points);
+        return (int)Math.floor(v);
     }
 }
