@@ -23,7 +23,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          # Fetch full history for scripts that may need commit data (e.g., versioning, changelogs).
+          # Fetch a full history for scripts that may need commit data (e.g., versioning, changelogs).
           fetch-depth: 0  # Required for full git history
 
       # Step 2: Ensure the current branch is not behind its remote counterpart.
